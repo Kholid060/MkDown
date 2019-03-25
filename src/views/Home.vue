@@ -1,36 +1,47 @@
 <template>
   <div class="fill-height">
-    <v-toolbar dark color="#3d404d" dense class="elevation-0">
-      <v-toolbar-side-icon></v-toolbar-side-icon>
-      <v-toolbar-title class="white--text">Markdown Editor</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-        <v-btn flat>halo</v-btn>
-        <v-btn icon @click="$vuetify.goTo('#second')">
-          <v-icon>expand_more</v-icon>
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
-    <v-layout row column fill-height>
-      <v-card color="#e8e8e8" class="elevation-0">
+    <top-menu :data="markData" @add="addTab" @remove="removeTab" @active="activeTab"></top-menu>
+    <div class="nothing" v-if="markData.length == 0">nothing</div>
+    <v-layout row column fill-height v-else>
+      <v-card color="#e8e8e8" class="elevation-0" id="start">
         <v-flex md12>
           <v-layout row wrap bb px-4>
             <v-flex md6 my-2 br>
               <toolbar-list @triggerAction="handleAction"></toolbar-list>
             </v-flex>
             <v-flex md6 pa-3>
-              <v-text-field class="file-name-form" full-width hide-details outline value="untitled document" label="File name"></v-text-field>
+              <v-text-field class="file-name-form" append-icon="save" full-width hide-details outline label="File name" v-model="markData[activeFile].title"></v-text-field>
             </v-flex>
           </v-layout>
         </v-flex>
       </v-card>
+      <div class="info">
+        <v-layout row wrap>
+          <v-flex md6 br>
+            <div class="tab-name bb body-2">
+              <p>Markdown</p>
+            </div>
+          </v-flex>
+          <v-flex md6>
+            <div class="tab-name bb body-2">
+              <p>Preview</p>
+            </div>
+          </v-flex>
+        </v-layout>
+      </div>
       <v-flex md12 fill-height>
-        <v-layout row wrap fill-height>
-          <v-flex md6 fill-height>
-            <editor ref='myEditor' v-model="editContent" @init="editorInit" lang="javascript" theme="chrome" width="100%" height="100%"></editor>
+        <v-layout row wrap fill-height overflow-hidden>
+          <v-flex md6 fill-height br>
+            <div class="editor-container overflow-auto">
+              <editor ref='myEditor' v-model="markData[activeFile].content" @init="editorInit" lang="markdown" theme="chrome" width="100%" height="100%"></editor>
+            </div>
           </v-flex>
           <v-flex md6 fill-height>
-            <div v-html="markdown"></div>
+            <div class="preview overflow-auto">
+              <div class="inner-preview">
+                <div class="preview-container pa-4" v-html="markdown"></div>
+              </div>
+            </div>
           </v-flex>
         </v-layout>
       </v-flex>
@@ -38,38 +49,126 @@
   </div>
 </template>
 <script>
-import marked from 'marked'
+import '../assets/markdown-style.css'
 import Toolbar from '../components/toolbar.vue'
 import AceEditor from 'vue2-ace-editor'
+import TopMenu from '../components/top-menu.vue'
+const md = require('markdown-it')({
+  breaks: true
+})
+md.use(require('markdown-it-checkbox'))
+md.use(require('markdown-it-link-attributes'))
 export default {
-  components: { 'toolbar-list': Toolbar, 'editor': AceEditor },
+  components: {
+    'toolbar-list': Toolbar,
+    'editor': AceEditor,
+    'top-menu': TopMenu
+  },
   data: () => ({
     textData: '',
-    editContent: ''
+    activeFile: 0,
+    markData: [
+      { title: 'untitled', content: '' }
+    ]
   }),
   methods: {
+    activeTab(a) {
+      this.activeFile = a
+    },
+    removeTab(i) {
+      this.activeFile == 1 ? null : this.activeFile = i - 1
+      this.markData.splice(i, 1)
+    },
+    addTab() {
+      this.markData.push({
+        title: 'untitled',
+        content: ''
+      })
+    },
     handleAction(event) {
-      let editor = this.$refs.myEditor.editor
-      editor.session.insert(editor.getCursorPosition(), event)
+      if (event.name == 'link' || event.name == 'image') {
+        console.log('anu')
+      } else {
+        let editor = this.$refs.myEditor.editor
+        editor.session.insert(editor.getCursorPosition(), event.code)
+      }
     },
     editorInit(editor) {
-      require('brace/ext/language_tools') //language extension prerequsite...
-      require('brace/mode/html')
-      require('brace/mode/javascript') //language
-      require('brace/mode/less')
+      require('brace/ext/language_tools')
+      require('brace/mode/markdown')
       require('brace/theme/chrome')
-      require('brace/snippets/javascript')
+      require('brace/snippets/markdown')
+      editor.setOptions({ fontSize: '13pt' })
     }
   },
   computed: {
     markdown() {
-      return marked(this.editContent, { sanitize: true })
+      return md.render(this.markData[this.activeFile].content)
     }
   }
 }
 
 </script>
 <style>
+.overflow-auto {
+  overflow: auto
+}
+
+.ace_scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ace_scrollbar::-webkit-scrollbar-thumb {
+  background: #d6d5d5;
+  border-radius: 50px;
+}
+
+.ace_scrollbar::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+.preview-container {
+  height: 100%
+}
+
+.preview {
+  position: absolute;
+  width: 50%;
+  height: 79%;
+}
+
+.inner-preview {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.preview-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.preview-container::-webkit-scrollbar-thumb {
+  background: #d6d5d5;
+  border-radius: 50px;
+}
+
+.preview-container::-webkit-scrollbar-track {
+  background: #eee;
+}
+
+.editor-container {
+  height: 100%;
+}
+
+.tab-name {
+  padding: 12px;
+  background-color: #d8d8d8;
+}
+
+.tab-name p {
+  margin: 0
+}
+
 .file-name-form .v-input__control .v-input__slot {
   background-color: rgb(217, 217, 217) !important;
   border-color: rgb(203, 203, 203) !important;

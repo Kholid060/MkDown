@@ -5,11 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "now-build": "vue-cli-service build"
   },
   "dependencies": {
-    "lodash": "^4.17.11",
-    "marked": "^0.6.1",
+    "markdown-it": "^8.4.2",
+    "markdown-it-checkbox": "^1.1.0",
+    "markdown-it-link-attributes": "^2.1.0",
     "showdown": "^1.9.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
