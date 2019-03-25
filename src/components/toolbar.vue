@@ -46,32 +46,32 @@ export default {
       { name: 'heading', icon: 'format_size' }
     ],
     second: [
-      { name: 'listBulleted', icon: 'format_list_bulleted', code: '\n- text\n- here\n' },
-      { name: 'listNumbered', icon: 'format_list_numbered', code: '\n1. text \n2. here\n' },
+      { name: 'listBulleted', icon: 'format_list_bulleted', code: '\n- text\n- here' },
+      { name: 'listNumbered', icon: 'format_list_numbered', code: '\n1. text \n2. here' },
       { name: 'checkBox', icon: 'check_box', code: '\n[X] checkbox\n' }
     ],
     third: [
       { name: 'quote', icon: 'format_quote', code: '\n> text here\n\n' },
       { name: 'code', icon: 'code', code: '`text here`' },
-      { name: 'link', icon: 'link' },
+      { name: 'link', icon: 'link', code: '[this is a link](https://google.com)' },
       { name: 'table', icon: 'border_all', code: '\n|   |   |   |   |   |\r\n|---|---|---|---|---|\r\n|   |   |   |   |   |\r\n|   |   |   |   |   |\n' },
-      { name: 'image', icon: 'image' }
+      { name: 'image', icon: 'image', code: '![alt text](https://picsum.photos/200 "image title")' }
     ]
   }),
   methods: {
-  	headingHandle(e){
+  	headingHandle (e) {
   		let hash = { name: 'heading', code: '' }
-  		if(e == 0){
+  		if (e == 0) {
   			hash.code = '#'
-  		}else{
-  			for(let i = 0; i < e + 1; i++){
+  		} else {
+  			for (let i = 0; i < e + 1; i++) {
   				hash.code += '#'
   			}
   		}
-  		hash.code += ' text here \n'
+  		hash.code = '\n' + hash.code + ' text here\n'
   		this.$emit('triggerAction', hash)
   	},
-    toolHandle(item) {
+    toolHandle (item) {
       this.$emit('triggerAction', item)
     }
   }

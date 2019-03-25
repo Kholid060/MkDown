@@ -10,7 +10,7 @@
               <toolbar-list @triggerAction="handleAction"></toolbar-list>
             </v-flex>
             <v-flex md6 pa-3>
-              <v-text-field class="file-name-form" append-icon="save" full-width hide-details outline label="File name" v-model="markData[activeFile].title"></v-text-field>
+              <v-text-field class="file-name-form" full-width hide-details outline label="File name" v-model="markData[activeFile].title"></v-text-field>
             </v-flex>
           </v-layout>
         </v-flex>
@@ -48,6 +48,7 @@
     </v-layout>
   </div>
 </template>
+
 <script>
 import '../assets/markdown-style.css'
 import Toolbar from '../components/toolbar.vue'
@@ -72,28 +73,24 @@ export default {
     ]
   }),
   methods: {
-    activeTab(a) {
+    activeTab (a) {
       this.activeFile = a
     },
-    removeTab(i) {
-      this.activeFile == 1 ? null : this.activeFile = i - 1
+    removeTab (i) {
+      this.activeFile == i ? this.activeFile-- : null
       this.markData.splice(i, 1)
     },
-    addTab() {
+    addTab () {
       this.markData.push({
         title: 'untitled',
         content: ''
       })
     },
-    handleAction(event) {
-      if (event.name == 'link' || event.name == 'image') {
-        console.log('anu')
-      } else {
-        let editor = this.$refs.myEditor.editor
-        editor.session.insert(editor.getCursorPosition(), event.code)
-      }
+    handleAction (event) {
+      let editor = this.$refs.myEditor.editor
+      editor.session.insert(editor.getCursorPosition(), event.code)
     },
-    editorInit(editor) {
+    editorInit (editor) {
       require('brace/ext/language_tools')
       require('brace/mode/markdown')
       require('brace/theme/chrome')
@@ -102,7 +99,7 @@ export default {
     }
   },
   computed: {
-    markdown() {
+    markdown () {
       return md.render(this.markData[this.activeFile].content)
     }
   }
@@ -166,7 +163,8 @@ export default {
 }
 
 .tab-name p {
-  margin: 0
+  margin: 0;
+  display: inline-block;
 }
 
 .file-name-form .v-input__control .v-input__slot {

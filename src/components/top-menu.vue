@@ -1,7 +1,6 @@
 <template>
   <v-toolbar dark color="#3d404d" dense class="elevation-0">
     <v-toolbar-side-icon></v-toolbar-side-icon>
-    <!-- <v-toolbar-title class="white--text mr-3">Markdown Editor</v-toolbar-title> -->
     <v-tabs show-arrows color="#3d404d" class="tab-container" v-model="active" @change="activeTab">
       <v-tabs-slider color="transparent"></v-tabs-slider>
       <v-tab :ripple="false" v-for="(item, i) in data" :key="i" class="file-tab">
@@ -23,22 +22,22 @@
   </v-toolbar>
 </template>
 <script>
-export default{
+export default {
   props: ['data'],
   data: () => ({
     active: 0
   }),
   methods: {
-    activeTab(a){
+    activeTab (a) {
       this.$emit('active', a)
     },
-    addTab(){
+    addTab () {
       this.$emit('add')
     },
-    removeTab(i){
+    removeTab (i) {
       this.$emit('remove', i)
     }
-  },
+  }
 }
 </script>
 <style>
