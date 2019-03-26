@@ -1,6 +1,6 @@
 <template>
   <div class="fill-height">
-    <top-menu :data="markData" @add="addTab" @remove="removeTab" @active="activeTab"></top-menu>
+    <top-menu :data="markData" @add="addTab" @remove="removeTab" @active="activeTab" @import="addImportFile"></top-menu>
     <div class="nothing" v-if="markData.length == 0">nothing</div>
     <v-layout row column fill-height v-else>
       <v-card color="#e8e8e8" class="elevation-0" id="start">
@@ -48,7 +48,6 @@
     </v-layout>
   </div>
 </template>
-
 <script>
 import '../assets/markdown-style.css'
 import Toolbar from '../components/toolbar.vue'
@@ -73,6 +72,14 @@ export default {
     ]
   }),
   methods: {
+    addImportFile (file) {
+      if (file.type = 'markdown') {
+        this.markData.push({
+          title: file.title,
+          content: file.content
+        })
+      }
+    },
     activeTab (a) {
       this.activeFile = a
     },

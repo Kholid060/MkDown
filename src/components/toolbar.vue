@@ -38,7 +38,7 @@
 <script>
 export default {
   data: () => ({
-  	headings: ['heading 1', 'heading 2', 'heading 3', 'heading 4', 'heading 5', 'heading 6'],
+    headings: ['heading 1', 'heading 2', 'heading 3', 'heading 4', 'heading 5', 'heading 6'],
     first: [
       { name: 'bold', icon: 'format_bold', code: '**text here**' },
       { name: 'italic', icon: 'format_italic', code: '*text here*' },
@@ -59,18 +59,18 @@ export default {
     ]
   }),
   methods: {
-  	headingHandle (e) {
-  		let hash = { name: 'heading', code: '' }
-  		if (e == 0) {
-  			hash.code = '#'
-  		} else {
-  			for (let i = 0; i < e + 1; i++) {
-  				hash.code += '#'
-  			}
-  		}
-  		hash.code = '\n' + hash.code + ' text here\n'
-  		this.$emit('triggerAction', hash)
-  	},
+    headingHandle (e) {
+      let hash = { name: 'heading', code: '' }
+      if (e == 0) {
+        hash.code = '#'
+      } else {
+        for (let i = 0; i < e + 1; i++) {
+          hash.code += '#'
+        }
+      }
+      hash.code = '\n' + hash.code + ' text here\n'
+      this.$emit('triggerAction', hash)
+    },
     toolHandle (item) {
       this.$emit('triggerAction', item)
     }
