@@ -9,10 +9,12 @@
     "now-build": "vue-cli-service build"
   },
   "dependencies": {
+    "file-saver": "^2.0.1",
     "markdown-it": "^8.4.2",
     "markdown-it-checkbox": "^1.1.0",
     "markdown-it-link-attributes": "^2.1.0",
     "showdown": "^1.9.0",
+    "turndown": "^5.0.3",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vuetify": "^1.5.5",

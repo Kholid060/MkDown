@@ -1,7 +1,7 @@
 <template>
   <div class="top-menu">
     <v-toolbar dark color="#3d404d" dense class="elevation-0">
-      <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+      <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x class="b5">
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
             <v-icon>menu</v-icon>
@@ -22,16 +22,17 @@
                   </v-list-tile-content>
                 </v-list-tile>
               </template>
-              <v-list-tile v-for="subItem in item.items" :key="subItem.title" @click="">
-                <v-list-tile-content>
-                  <label class="file-select" @click="importType = subItem.name">
+              <v-list-tile v-for="(subItem, i) in item.items" :key="subItem.title+i" @click="">
+                <label class="file-select" @click="" v-if="item.title == 'Import'">
+                  <v-list-tile-content>
                     <v-list-tile-title>{{subItem.title}}</v-list-tile-title>
-                    <input type="file" ref="fileUpload" @change="importFile" :accept="subItem.name == 'markdown' ? '.md' : 'text/html'">
-                  </label>
+                    <input type="file" class="fileUpload" ref="fileUpload" @change="importFile" :accept="subItem.name == 'markdown' ? '.md' : 'text/html'">
+                  </v-list-tile-content>
+                </label>
+                <v-list-tile-content v-else>
+                  <v-list-tile-title @click="exportFile(subItem)">{{subItem.title}}</v-list-tile-title>
                 </v-list-tile-content>
-                <v-list-tile-action>
-                  <v-icon>{{ subItem.action }}</v-icon>
-                </v-list-tile-action>
+                <v-icon>{{ subItem.action }}</v-icon>
               </v-list-tile>
             </v-list-group>
           </v-list>
@@ -62,6 +63,8 @@
   </div>
 </template>
 <script>
+import TurndownService from 'turndown'
+const mkdown = new TurndownService()
 export default {
   props: ['data'],
   data: () => ({
@@ -80,11 +83,24 @@ export default {
         { title: 'Markdown File', name: 'markdown' },
         { title: 'HTML File', name: 'html' }
       ]
-    } ]
+    },
+    {
+      action: 'save',
+      title: 'Export As',
+      items: [
+        { title: 'HTML', name: 'html', ext: '.html' },
+        { title: 'Styled HTML', name: 'shtml', ext: '.html' },
+        { title: 'Markdown', name: 'markdown', ext: '.md' }
+      ]
+    }
+    ]
   }),
   methods: {
+    exportFile (f) {
+      this.$emit('export', f)
+    },
     importFile (e) {
-      let regex = /\..*/g
+      let regex = /[^.]+$/
       let fileName = e.target.files[0].name
       let ext = regex.exec(fileName)[0]
       let file = e.target.files[0]
@@ -92,11 +108,12 @@ export default {
       const reader = new FileReader()
       reader.readAsText(file)
       reader.onload = (a) => {
-        if (ext == '.md' || ext == '.html') {
+        if (ext == 'md' || ext == 'html') {
+          let content = ext == 'md' ? a.target.result : mkdown.turndown(a.target.result)
           let importFile = {
-            title: fileName.replace(regex, ''),
-            content: a.target.result,
-            type: ext == '.md' ? 'markdown' : 'html'
+            title: fileName.replace(/\..*/g, ''),
+            content: content,
+            type: ext == 'md' ? 'markdown' : 'html'
           }
           this.$emit('import', importFile)
         } else {
@@ -104,11 +121,6 @@ export default {
           this.snackbar.text = 'invalid file type'
           this.snackbar.color = 'error'
         }
-      }
-      reader.onerror = (b) => {
-        this.snackbar.active = true
-        this.snackbar.text = 'something went wrong'
-        this.snackbar.color = 'error'
       }
       input.type = 'text'
       input.type = 'file'
@@ -139,7 +151,7 @@ export default {
   }
 }
 
-.file-select>input[type="file"] {
+.fileUpload {
   display: none;
 }
 
