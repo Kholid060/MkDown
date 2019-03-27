@@ -10,21 +10,21 @@
               <toolbar-list @triggerAction="handleAction"></toolbar-list>
             </v-flex>
             <v-flex md6 pa-3>
-              <v-text-field class="file-name-form" full-width hide-details outline label="File name" v-model="markData[activeFile].title"></v-text-field>
+              <v-text-field class="file-name-form" full-width hide-details outline label="File name" v-model="activeData.title"></v-text-field>
             </v-flex>
           </v-layout>
         </v-flex>
       </v-card>
       <div class="info hidden-sm-and-down">
         <v-layout row wrap>
-          <v-flex md6 br>
-            <div class="tab-name bb body-2">
-              <p>Markdown</p>
+          <v-flex md6 br tab-name bb>
+            <div class="body-2">
+              <span>Markdown</span>
             </div>
           </v-flex>
-          <v-flex md6>
-            <div class="tab-name bb body-2">
-              <p>Preview</p>
+          <v-flex md6 tab-name bb>
+            <div class="body-2">
+              <span>Preview</span>
             </div>
           </v-flex>
         </v-layout>
@@ -33,19 +33,46 @@
         <v-layout row wrap fill-height overflow-hidden>
           <v-flex md6 fill-height br xs12>
             <div class="editor-container overflow-auto">
-              <editor ref='myEditor' v-model="markData[activeFile].content" @init="editorInit" lang="markdown" theme="chrome" width="100%" height="100%"></editor>
+              <editor ref='myEditor' v-model="activeData.content" @init="editorInit" lang="markdown" theme="chrome" width="100%" height="100%"></editor>
             </div>
           </v-flex>
+          <div class="tab-name hidden-md-and-up">
+            <span>Preview</span>
+          </div>
           <v-flex md6 fill-height xs12>
             <div class="preview overflow-auto">
               <div class="inner-preview">
-                <div class="preview-container pa-4" v-html="markdown"></div>
+                <pre class="preview-container pa-4" v-if="srcCode">{{markdown}}</pre>
+                <div class="preview-container pa-4" v-else v-html="markdown"></div>
+              </div>
+              <div class="preview-tool">
+                <v-btn icon @click="previewDialog = true">
+                  <v-icon>fullscreen</v-icon>
+                </v-btn>
+                <v-btn icon @click="srcCode = !srcCode">
+                  <v-icon>code</v-icon>
+                </v-btn>
               </div>
             </div>
           </v-flex>
         </v-layout>
       </v-flex>
     </v-layout>
+    <!-- Preview Dialog -->
+    <v-dialog v-model="previewDialog" max-width="55%" scrollable>
+      <v-card>
+        <v-card-title class="title">{{activeData.title}} preview</v-card-title>
+        <v-card-text>
+          <div class="px-4 preview-container" v-html="markdown"></div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="cyan darken-1" flat="flat" @click="previewDialog = false">
+            close
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script>
@@ -70,7 +97,9 @@ export default {
     'top-menu': TopMenu
   },
   data: () => ({
+    previewDialog: false,
     activeFile: 0,
+    srcCode: false,
     markData: [
       { title: 'untitled', content: "# MkDown\r\n\r\nMkDown is an online markdown editor built with [vueJs](https:\/\/vuejs.org). How to use MkDown Markdown Editor:\r\n\r\n- Type some markdown in left side\r\n- See the preview on right side\r\n- And Voil\u00E0\r\n\r\n## Feature\r\n\r\n- Import Markdown file from your pc\r\n- Import your HTML file and convert it to markdown\r\n- Export your document as a Markdown file, HTML or HTML styled file\r\n\r\nAnd I think that\'s it" }
     ],
@@ -131,6 +160,9 @@ export default {
     }
   },
   computed: {
+    activeData() {
+      return this.markData[this.activeFile]
+    },
     markdown() {
       return md.render(this.markData[this.activeFile].content)
     }
@@ -194,15 +226,40 @@ export default {
   background-color: #d8d8d8;
 }
 
-.tab-name p {
-  margin: 0;
+.tab-name div {
   display: inline-block;
+}
+
+.preview-tool button {
+  display: block;
+}
+
+.tab-name.hidden-md-and-up {
+  width: 100%;
+}
+
+.preview-tool {
+  right: 10px;
+  position: absolute;
+  background-color: #0000000f;
+  top: 5px;
+  border-radius: 5px;
 }
 
 .file-name-form .v-input__control .v-input__slot {
   background-color: rgb(217, 217, 217) !important;
   border-color: rgb(203, 203, 203) !important;
 }
+
+/*media start*/
+
+@media only screen and (max-width: 960px) {
+  .preview {
+    width: 100%;
+  }
+}
+
+/*media end*/
 
 .br {
   border-right: 1px solid rgb(178, 178, 178)

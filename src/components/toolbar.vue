@@ -1,6 +1,6 @@
 <template>
-  <v-layout fill-height row wrap align-center justify-space-between pl-3>
-    <v-flex md4 xs6 toolbar-container py-2>
+  <v-layout fill-height row wrap align-center justify-center pl-3>
+    <v-flex md4 xs6 sm4 toolbar-container py-2>
       <template v-for="item in first">
         <v-menu offset-y v-if="item.name == 'heading'">
           <template v-slot:activator="{ on }">
@@ -19,14 +19,14 @@
         </span>
       </template>
     </v-flex>
-    <v-flex md3 xs6 toolbar-container py-2>
+    <v-flex md3 xs6 sm3 toolbar-container py-2>
       <template v-for="item in second">
         <span :key="item.name" :title="item.name" class="toolbar-icon" @click="toolHandle(item)">
           <v-icon>{{item.icon}}</v-icon>
         </span>
       </template>
     </v-flex>
-    <v-flex md5 xs12 toolbar-container py-2>
+    <v-flex md5 xs8 sm5 toolbar-container py-2>
       <template v-for="item in third">
         <span :key="item.name" :title="item.name" class="toolbar-icon" @click="toolHandle(item)">
           <v-icon>{{item.icon}}</v-icon>
