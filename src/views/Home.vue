@@ -59,7 +59,7 @@
       </v-flex>
     </v-layout>
     <!-- Preview Dialog -->
-    <v-dialog v-model="previewDialog" max-width="55%" scrollable>
+    <v-dialog v-model="previewDialog" max-width="700px" scrollable>
       <v-card>
         <v-card-title class="title">{{activeData.title}} preview</v-card-title>
         <v-card-text>
