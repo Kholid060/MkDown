@@ -22,8 +22,8 @@
                   </v-list-tile-content>
                 </v-list-tile>
               </template>
-              <v-list-tile v-for="(subItem, i) in item.items" :key="subItem.title+i" @click="">
-                <label class="file-select" @click="" v-if="item.title == 'Import'">
+              <v-list-tile v-for="(subItem, i) in item.items" :key="subItem.title+i">
+                <label class="file-select" v-if="item.title == 'Import'">
                   <v-list-tile-content>
                     <v-list-tile-title>{{subItem.title}}</v-list-tile-title>
                     <input type="file" class="fileUpload" ref="fileUpload" @change="importFile" :accept="subItem.name == 'markdown' ? '.md' : 'text/html'">
@@ -89,33 +89,32 @@ export default {
       color: 'primary'
     },
     importType: '',
-    items: [
-      {
-        action: 'insert_drive_file',
-        title: 'Import',
-        items: [
-          { title: 'Markdown File', name: 'markdown' },
-          { title: 'HTML File', name: 'html' }
-        ]
-      },
-      {
-        action: 'save',
-        title: 'Export As',
-        items: [
-          { title: 'HTML', name: 'html', ext: '.html' },
-          { title: 'Styled HTML', name: 'shtml', ext: '.html' },
-          { title: 'Markdown', name: 'markdown', ext: '.md' }
-        ]
-      },
-      {
-        action: 'visibility',
-        title: 'Preview As',
-        items: [
-          { title: 'HTML', name: 'html' },
-          { title: 'Styled HTML', name: 'shtml' },
-          { title: 'Markdown', name: 'markdown' }
-        ]
-      }
+    items: [{
+      action: 'insert_drive_file',
+      title: 'Import',
+      items: [
+        { title: 'Markdown File', name: 'markdown' },
+        { title: 'HTML File', name: 'html' }
+      ]
+    },
+    {
+      action: 'save',
+      title: 'Export As',
+      items: [
+        { title: 'HTML', name: 'html', ext: '.html' },
+        { title: 'Styled HTML', name: 'shtml', ext: '.html' },
+        { title: 'Markdown', name: 'markdown', ext: '.md' }
+      ]
+    },
+    {
+      action: 'visibility',
+      title: 'Preview As',
+      items: [
+        { title: 'HTML', name: 'html' },
+        { title: 'Styled HTML', name: 'shtml' },
+        { title: 'Markdown', name: 'markdown' }
+      ]
+    }
     ]
   }),
   methods: {
@@ -177,15 +176,15 @@ export default {
   }
 }
 
-.file-tab > .v-tabs__item {
+.file-tab>.v-tabs__item {
   padding-right: 0
 }
 
-.v-tabs__item--active > .close-button-container{
+.v-tabs__item--active>.close-button-container {
   border-right: none;
 }
 
-.close-button-container{
+.close-button-container {
   border-right: 1px solid rgb(101, 104, 115);
 }
 
@@ -223,7 +222,7 @@ export default {
   border-top-right-radius: 7px;
   border-top-left-radius: 7px;
   color: #3d404d;
-  box-shadow: 0px 6px 6px -3px rgba(0,0,0,0.2), 0px 10px 14px 1px rgba(0,0,0,0.14), 0px 4px 18px 3px rgba(0,0,0,0.12) !important;
+  box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14), 0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
 }
 
 .v-tabs__item--active .close-button-container .close-button-tab {
@@ -234,7 +233,7 @@ export default {
   color: #3d404d !important;
 }
 
-.nodec{
+.nodec {
   text-decoration: none;
   text-transform: capitalize;
 }

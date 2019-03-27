@@ -6,12 +6,12 @@
   </div>
 </template>
 <script>
+import '../assets/markdown-style.css'
 const md = require('markdown-it')({
   breaks: true
 })
-import '../assets/markdown-style.css'
 export default {
-  metaInfo() {
+  metaInfo () {
     return {
       title: this.data.title,
       titleTemplate: '%s | MkDown'
@@ -19,14 +19,14 @@ export default {
   },
   data: () => ({
     data: null,
-    type: '',
+    type: ''
   }),
   computed: {
-    markdown() {
+    markdown () {
       return md.render(this.data.content)
     }
   },
-  created() {
+  created () {
     let retrieve = localStorage.getItem('mkdown')
     this.data = JSON.parse(retrieve)
     this.type = this.$route.params.file
