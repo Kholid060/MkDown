@@ -1,6 +1,6 @@
 <template>
   <div class="top-menu">
-    <v-toolbar dark color="#3d404d" dense class="elevation-0">
+    <v-toolbar dark color="#3d404d" height="40px" class="elevation-0">
       <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x class="b5">
         <template v-slot:activator="{ on }">
           <v-btn icon v-on="on">
@@ -11,7 +11,7 @@
           <v-list>
             <v-list-tile>
               <v-list-tile-content>
-                <p class="title">Markdown Editor</p>
+                <p class="title">MkDown</p>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-group v-for="item in items" :key="item.title" v-model="item.active" :prepend-icon="item.action" no-action>
@@ -29,12 +29,23 @@
                     <input type="file" class="fileUpload" ref="fileUpload" @change="importFile" :accept="subItem.name == 'markdown' ? '.md' : 'text/html'">
                   </v-list-tile-content>
                 </label>
-                <v-list-tile-content v-else>
+                <v-list-tile-content v-else-if="item.title == 'Export As'">
                   <v-list-tile-title @click="exportFile(subItem)">{{subItem.title}}</v-list-tile-title>
+                </v-list-tile-content>
+                <v-list-tile-content v-else>
+                  <v-list-tile-title @click="previewFile(subItem)">{{subItem.title}}</v-list-tile-title>
                 </v-list-tile-content>
                 <v-icon>{{ subItem.action }}</v-icon>
               </v-list-tile>
             </v-list-group>
+            <v-list-tile href="mailto: kholid060@gmail.com">
+              <v-list-tile-avatar>
+                <v-icon>person</v-icon>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                contact
+              </v-list-tile-content>
+            </v-list-tile>
           </v-list>
         </v-card>
       </v-menu>
@@ -42,9 +53,11 @@
         <v-tabs-slider color="transparent"></v-tabs-slider>
         <v-tab :ripple="false" v-for="(item, i) in data" :key="i" class="file-tab">
           <span class="text-truncate text-capitalize">{{item.title}}</span>
-          <v-btn icon small class="ma-0 ml-5 close-button-tab" @click="removeTab(i)">
-            <v-icon small>close</v-icon>
-          </v-btn>
+          <div class="close-button-container pl-5 pr-2">
+            <v-btn icon small class="ma-0 close-button-tab" @click="removeTab(i)">
+              <v-icon small>close</v-icon>
+            </v-btn>
+          </div>
         </v-tab>
       </v-tabs>
       <v-btn icon @click="addTab">
@@ -76,26 +89,39 @@ export default {
       color: 'primary'
     },
     importType: '',
-    items: [{
-      action: 'insert_drive_file',
-      title: 'Import',
-      items: [
-        { title: 'Markdown File', name: 'markdown' },
-        { title: 'HTML File', name: 'html' }
-      ]
-    },
-    {
-      action: 'save',
-      title: 'Export As',
-      items: [
-        { title: 'HTML', name: 'html', ext: '.html' },
-        { title: 'Styled HTML', name: 'shtml', ext: '.html' },
-        { title: 'Markdown', name: 'markdown', ext: '.md' }
-      ]
-    }
+    items: [
+      {
+        action: 'insert_drive_file',
+        title: 'Import',
+        items: [
+          { title: 'Markdown File', name: 'markdown' },
+          { title: 'HTML File', name: 'html' }
+        ]
+      },
+      {
+        action: 'save',
+        title: 'Export As',
+        items: [
+          { title: 'HTML', name: 'html', ext: '.html' },
+          { title: 'Styled HTML', name: 'shtml', ext: '.html' },
+          { title: 'Markdown', name: 'markdown', ext: '.md' }
+        ]
+      },
+      {
+        action: 'visibility',
+        title: 'Preview As',
+        items: [
+          { title: 'HTML', name: 'html' },
+          { title: 'Styled HTML', name: 'shtml' },
+          { title: 'Markdown', name: 'markdown' }
+        ]
+      }
     ]
   }),
   methods: {
+    previewFile (p) {
+      this.$emit('preview', p)
+    },
     exportFile (f) {
       this.$emit('export', f)
     },
@@ -151,6 +177,18 @@ export default {
   }
 }
 
+.file-tab > .v-tabs__item {
+  padding-right: 0
+}
+
+.v-tabs__item--active > .close-button-container{
+  border-right: none;
+}
+
+.close-button-container{
+  border-right: 1px solid rgb(101, 104, 115);
+}
+
 .fileUpload {
   display: none;
 }
@@ -182,13 +220,23 @@ export default {
 
 .v-tabs__item--active {
   background-color: #e8e8e8;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
+  border-top-right-radius: 7px;
+  border-top-left-radius: 7px;
   color: #3d404d;
+  box-shadow: 0px 6px 6px -3px rgba(0,0,0,0.2), 0px 10px 14px 1px rgba(0,0,0,0.14), 0px 4px 18px 3px rgba(0,0,0,0.12) !important;
+}
+
+.v-tabs__item--active .close-button-container .close-button-tab {
+  visibility: visible;
 }
 
 .v-tabs__item--active button .v-btn__content i {
-  color: red
+  color: #3d404d !important;
+}
+
+.nodec{
+  text-decoration: none;
+  text-transform: capitalize;
 }
 
 </style>

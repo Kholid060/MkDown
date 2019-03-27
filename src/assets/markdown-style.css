@@ -366,7 +366,7 @@
 .preview-container ol,
 .preview-container ul {
   margin-bottom: 0;
-  margin-top: 0;
+  margin-top: 10px !important;
   padding-left: 0;
 }
 

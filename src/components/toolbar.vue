@@ -1,6 +1,6 @@
 <template>
-  <v-layout fill-height row wrap align-center>
-    <div class="toolbar-container">
+  <v-layout fill-height row wrap align-center justify-space-between pl-3>
+    <v-flex md4 xs6 toolbar-container py-2>
       <template v-for="item in first">
         <v-menu offset-y v-if="item.name == 'heading'">
           <template v-slot:activator="{ on }">
@@ -18,21 +18,21 @@
           <v-icon>{{item.icon}}</v-icon>
         </span>
       </template>
-    </div>
-    <div class="toolbar-container" id="second">
+    </v-flex>
+    <v-flex md3 xs6 toolbar-container py-2>
       <template v-for="item in second">
         <span :key="item.name" :title="item.name" class="toolbar-icon" @click="toolHandle(item)">
           <v-icon>{{item.icon}}</v-icon>
         </span>
       </template>
-    </div>
-    <div class="toolbar-container">
+    </v-flex>
+    <v-flex md5 xs12 toolbar-container py-2>
       <template v-for="item in third">
         <span :key="item.name" :title="item.name" class="toolbar-icon" @click="toolHandle(item)">
           <v-icon>{{item.icon}}</v-icon>
         </span>
       </template>
-    </div>
+    </v-flex>
   </v-layout>
 </template>
 <script>
@@ -81,10 +81,6 @@ export default {
 <style>
 .toolbar-container {
   display: inline-block;
-}
-
-#second {
-  margin: 0 10px;
 }
 
 .toolbar-icon {
