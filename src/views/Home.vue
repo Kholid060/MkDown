@@ -30,7 +30,7 @@
         </v-layout>
       </div>
       <v-flex md12 fill-height>
-        <v-layout row wrap fill-height overflow-hidden>
+        <v-layout row wrap fill-height>
           <v-flex md6 fill-height br xs12>
             <div class="editor-container overflow-auto">
               <editor ref='myEditor' v-model="activeData.content" @init="editorInit" lang="markdown" theme="chrome" width="100%" height="100%"></editor>
